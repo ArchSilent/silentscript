@@ -1,23 +1,30 @@
-import subprocess
-import tkinter as tk
+import subprocess as sp
+import tkinter as tk 
+from tkinter import messagebox as mb
 from tkinter import filedialog
 
-# Definir el banner
-banner = """
-*********************************************
-*                                           *
-*          Información del sistema          *
-*                                           *
-*********************************************
-\n
+#Baner
+# Banner
+banner = r"""
+                    )         (                 )
+    )  (         ( /(     (   )\   (         ( /(  
+ ( /(  )(    (   )\()) (  )\ ((_) ))\  (     )\()) 
+ )(_))(()\   )\ ((_)\  )\((_) _  /((_) )\ ) (_))/
+((_)_  ((_) ((_)| |(_)((_)(_)| |(_))  _(_/( | |_
+/ _` || '_|/ _| | ' \ (_-<| || |/ -_)| ' \))|  _|
+\__,_||_|  \__| |_||_|/__/|_||_|\___||_||_|  \__|
+
 """
 
 # Definir los comandos a ejecutar
 comandos = [
+    "whoami",
+    "hostname",
     "wmic bios get serialnumber",
     "wmic diskdrive get model, serialnumber",
     "wmic memorychip get devicelocator, serialnumber",
-    "wmic memphysical get maxcapacity, memoryDevices"
+    "wmic memphysical get maxcapacity, memoryDevices",
+    "ip config /all"
 ]
 
 # Crear una ventana de tkinter para seleccionar la ubicación del archivo
@@ -37,19 +44,19 @@ if ruta_salida:
         # Iterar sobre los comandos y ejecutarlos
         for comando in comandos:
             # Agregar una línea al archivo indicando el comando que se está ejecutando
-            archivo.write(f"Resultados del comando: {comando}\n\n")
+            archivo.write(f"resultado de :{comando}\n")
 
             # Ejecutar el comando y capturar la salida
-            resultado = subprocess.run(comando, capture_output=True, text=True)
+            resultado = sp.run(comando, capture_output=True, text=True)
 
             # Verificar si la ejecución fue exitosa y escribir la salida en el archivo
             if resultado.returncode == 0:
                 archivo.write(resultado.stdout)
-                archivo.write("\n\n")
+                archivo.write("\n")
             else:
                 archivo.write(f"Error al ejecutar el comando: {comando}\n\n")
 
     # Mostrar un mensaje indicando que se completó la ejecución
     print(f"Los resultados se han guardado en {ruta_salida}")
 else:
-    print("No se seleccionó ninguna ubicación para guardar el archivo.")
+    mb.showinfo("aviso", "No se ha seleccionado ninguna direccion para guardar el archivo")
