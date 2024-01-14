@@ -3,35 +3,36 @@ import tkinter as tk
 from tkinter import messagebox as mb
 from tkinter import filedialog
 
-#Baner
+
 # Banner
 banner = r"""
-                    )         (                 )
-    )  (         ( /(     (   )\   (         ( /(  
- ( /(  )(    (   )\()) (  )\ ((_) ))\  (     )\()) 
- )(_))(()\   )\ ((_)\  )\((_) _  /((_) )\ ) (_))/
-((_)_  ((_) ((_)| |(_)((_)(_)| |(_))  _(_/( | |_
-/ _` || '_|/ _| | ' \ (_-<| || |/ -_)| ' \))|  _|
-\__,_||_|  \__| |_||_|/__/|_||_|\___||_||_|  \__|
+ ________  ________  ________  ___  ___  ________  ___  ___       _______   ________   _________   
+|\   __  \|\   __  \|\   ____\|\  \|\  \|\   ____\|\  \|\  \     |\  ___ \ |\   ___  \|\___   ___\ 
+\ \  \|\  \ \  \|\  \ \  \___|\ \  \\\  \ \  \___|\ \  \ \  \    \ \   __/|\ \  \\ \  \|___ \  \_| 
+ \ \   __  \ \   _  _\ \  \    \ \   __  \ \_____  \ \  \ \  \    \ \  \_|/_\ \  \\ \  \   \ \  \  
+  \ \  \ \  \ \  \\  \\ \  \____\ \  \ \  \|____|\  \ \  \ \  \____\ \  \_|\ \ \  \\ \  \   \ \  \ 
+   \ \__\ \__\ \__\\ _\\ \_______\ \__\ \__\____\_\  \ \__\ \_______\ \_______\ \__\\ \__\   \ \__\
+    \|__|\|__|\|__|\|__|\|_______|\|__|\|__|\_________\|__|\|_______|\|_______|\|__| \|__|    \|__|
+                                           \|_________|                                            
+                                                                                                   
+                                                                                                   
 
 """
 
 # Definir los comandos a ejecutar
 comandos = [
-    "whoami",
-    "hostname",
     "wmic bios get serialnumber",
+    "systeminfo",
     "wmic diskdrive get model, serialnumber",
     "wmic memorychip get devicelocator, serialnumber",
     "wmic memphysical get maxcapacity, memoryDevices",
-    "ip config /all"
 ]
 
 # Crear una ventana de tkinter para seleccionar la ubicación del archivo
 root = tk.Tk()
 root.withdraw()  # Ocultar la ventana principal
 
-# Mostrar un cuadro de diálogo para seleccionar la ubicación del archivo
+# Cuadro de diálogo para seleccionar la ubicación del archivo
 ruta_salida = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Archivos de texto", "*.txt")])
 
 # Verificar si se seleccionó una ubicación de archivo válida
@@ -41,10 +42,10 @@ if ruta_salida:
         # Escribir el banner en el archivo
         archivo.write(banner)
 
-        # Iterar sobre los comandos y ejecutarlos
+        # Iteracion de comandos y ejecutarlos
         for comando in comandos:
             # Agregar una línea al archivo indicando el comando que se está ejecutando
-            archivo.write(f"resultado de :{comando}\n")
+            archivo.write(f"{comando}\n")
 
             # Ejecutar el comando y capturar la salida
             resultado = sp.run(comando, capture_output=True, text=True)
@@ -56,7 +57,10 @@ if ruta_salida:
             else:
                 archivo.write(f"Error al ejecutar el comando: {comando}\n\n")
 
-    # Mostrar un mensaje indicando que se completó la ejecución
-    print(f"Los resultados se han guardado en {ruta_salida}")
+    # Mensaje que indica donde se ha guardado el archivo
+    aviso = f"Los resultados se han guardado en: {ruta_salida}"
+    mb.showinfo("info", aviso)
+    
 else:
+    # Mensaje que infica que no se ha seleccionado la direccion/ruta para guardar el archivo
     mb.showinfo("aviso", "No se ha seleccionado ninguna direccion para guardar el archivo")
